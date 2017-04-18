@@ -264,3 +264,47 @@ function wpcf7_intel_wpcf7_display_message($message, $status) {
 
   return $message;
 }
+
+add_filter('intel_form_type_forms_info', 'wpcf7_intel_form_type_forms_info');
+function wpcf7_intel_form_type_forms_info($info) {
+  $args = array(
+    'post_type'   => 'wpcf7_contact_form'
+  );
+
+  $info['wpcf7'] = get_posts( $args );
+
+  return $info;
+}
+
+add_filter('intel_form_type_wpcf7_form_setup', 'wpcf7_intel_form_type_form_setup', 0, 2);
+function wpcf7_intel_form_type_form_setup($data, $info) {
+
+  if (empty($info->ID)) {
+    return $info;
+  }
+
+  $data['id'] = $info->ID;
+  $data['title'] = $info->post_title;
+  $options = get_option('wpcf7_intel_form_settings_' . $info->ID, array());
+
+  if (!empty($options)) {
+    if (!empty($options['tracking_event_name'])) {
+      $labels = gf_intel_intl_eventgoal_labels();
+      $data['tracking_event'] = !empty($labels[$options['tracking_event_name']]) ? $labels[$options['tracking_event_name']] : $options['tracking_event_name'];
+    }
+
+    $data['field_map'] = array();
+    if (!empty($options['field_map']) && is_array($options['field_map'])) {
+      foreach ($options['field_map'] as $k => $v) {
+        if (!empty($v)) {
+          $data['field_map'][] = $v;
+        }
+      }
+    }
+
+  }
+
+  $data['settings_url'] = '/wp-admin/admin.php?page=wpcf7&action=edit&post=' . $data['id'];
+
+  return $data;
+}
