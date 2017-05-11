@@ -13,7 +13,7 @@
 *
 * @wordpress-plugin
 * Plugin Name:       Contact Form 7 Intelligence
-* Plugin URI:        http://intelligencewp.com/plugin/contact-form-7-intelligence/
+* Plugin URI:        http://intelligencewp.com/plugin/cf7-intelligence/
 * Description:       Integrates Intelligence with Contact Form 7 enabling easy Google Analytics goal tracking and visitor intelligence gathering.
 * Version:           1.0.0
 * Author:            Tom McCracken
@@ -22,10 +22,15 @@
 * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
 * Text Domain:       wpcf7_intel
 * Domain Path:       /languages
- * GitHub Plugin URI: https://github.com/levelten/contact-form-7-intelligence
+* GitHub Plugin URI: https://github.com/levelten/wp-cf7-intelligence
 */
 
-define('WPCF7_INTEL_VER', '1.0.0');
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+  die;
+}
+
+define('WPCF7_INTEL_VER', '1.0.1');
 
 add_filter('wpcf7_editor_panels', 'wpcf7_intel_wpcf7_editor_panels');
 function wpcf7_intel_wpcf7_editor_panels($panels) {
@@ -364,14 +369,14 @@ function wpcf7_intel_wpcf7_before_send_mail($obj) {
     }
   }
 
-  Intel_Df::watchdog('wpcf7_intel_wpcf7_before_send_mail settings', print_r($settings, 1));
+  //Intel_Df::watchdog('wpcf7_intel_wpcf7_before_send_mail settings', print_r($settings, 1));
   // process visitor_properties
   if (!empty($settings['field_map']) && is_array($settings['field_map'])) {
     foreach ($settings['field_map'] as $prop_name => $field_name) {
       // strip [] brackets around $field_name
       $fn = substr(substr($field_name, 1), 0, -1);
       if (!empty($field_name) && !empty($posted_data[$fn])) {
-        $visitor_properties[$prop_name] = sanitize_text_field([$fn]);
+        $visitor_properties[$prop_name] = sanitize_text_field($posted_data[$fn]);
       }
     }
   }
@@ -441,10 +446,9 @@ function wpcf7_intel_form_type_form_setup($data, $info) {
 /*
  *
  */
-// dependencies notice
-// admin notices
-add_action( 'admin_notices', 'wpcf7_intel_admin_setup_notice' );
-function wpcf7_intel_admin_setup_notice() {
+// dependencies notices
+add_action( 'admin_notices', 'wpcf7_intel_plugin_dependency_notice' );
+function wpcf7_intel_plugin_dependency_notice() {
   global $pagenow;
   // Short-circuit it.
   if ( 'plugins.php' != $pagenow ) {
