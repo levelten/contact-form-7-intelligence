@@ -392,26 +392,9 @@ function wpcf7_intel_wpcf7_display_message($message, $status) {
   if (!defined('INTEL_VER')) {
     return $message;
   }
-
-  // if there was an error, no intel pushes should exists.
-  $pushes = intel()->tracker->get_intel_pushes();
-
-  if (empty($pushes)) {
-    return $message;
-  }
-
-  // cf7 places the message on the page twice, once for standard display and a
-  // another for screen readers which will trigger the event twice. The following
-  // js will only push the events once.
-  $message .= "\n<script>
-    var _wpcf7_intel_goal_cnt = _wpcf7_intel_goal_cnt || 0;
-    if (_wpcf7_intel_goal_cnt == 0) {
-      _wpcf7_intel_goal_cnt++;
-";
-  foreach ($pushes as $key => $value) {
-    $message .= "  io('$key', " . json_encode($value) . ");\n";
-  }
-  $message .= "}\n</script>";
+  $script = intel()->tracker->get_pushes_script();
+  $message .= "\n$script";
+  //$message .= 'wpcf7_intel_wpcf7_display_message was here';
 
   return $message;
 }
