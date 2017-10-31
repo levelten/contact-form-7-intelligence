@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
   die;
 }
 
-define('WPCF7_INTEL_VER', '1.0.2');
+define('WPCF7_INTEL_VER', '1.0.3');
 
 add_filter('wpcf7_editor_panels', 'wpcf7_intel_wpcf7_editor_panels');
 function wpcf7_intel_wpcf7_editor_panels($panels) {
@@ -56,6 +56,9 @@ function wpcf7_intel_form_edit_page($contact_form) {
   require_once INTEL_DIR . 'includes/class-intel-form.php';
 
   $out = Intel_Form::drupal_get_form('wpcf7_intel_form_edit_form', $contact_form);
+  if (is_array($out)) {
+    $out = Intel_Df::render($out);
+  }
 
   print $out;
 }
