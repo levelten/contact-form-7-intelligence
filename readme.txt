@@ -8,22 +8,37 @@ Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Automates Google Analytics tracking of Contact Form 7 forms.
+Automates Google Analytics tracking of Contact Form 7.
 
 == Description ==
 
-Intelligence is a framework for enabling websites to generate actionable, results oriented Google Analytics. This plugin
-enables you to easily trigger analytics goals and events for Contact Form 7 submissions. The Pro version also enables
-you to progressively build contact profiles of your site visitors based on form submissions and 3rd party data.
+Enables you to easily track all form submissions using Google Analytics goals.
+
+Core features include:
+* Create and manage Google Analytics goals directly in WordPress
+* Set a default goal that triggers on all Contact Form 7 submissions
+* Set different goals per form
+* Set goal values per form
+
+Integrates with the Intelligence API to automate Google Analytics goals in WordPress. Intelligence is a framework for
+enhanced Google Analytics.
 
 To learn more about Intelligence for WordPress visit [intelligencewp.com](https://intelligencewp.com)
 
 == Installation ==
 
-Install and activate the plugin using your preferred method of plugin installation. Once active, an "Intelligence" tab
-will display on your Edit Contact Form admin. You can use this tab to configure submission tracking and profile building.
+Install and activate the plugin using your preferred method of plugin installation. Click the Setup plugin button in the
+notice at the top of the Plugins page or by going to the Intelligence link under Contact Form 7 settings.
 
-This plugin requires that the Intelligence plugin is installed and setup along with the Contact Form 7 plugin.
+Follow the steps in the setup wizard.
+
+== Screen Shots ==
+
+1. Select a goal and goal value to track on different form submissions
+2. Easily add goals to your in Google Analytics
+3. Manage Google Analytics goals without leaving WordPress
+4. Automatically trigger goals on form submission
+5. Set a default goal to make sure no form submissions are missed
 
 == Changelog ==
 

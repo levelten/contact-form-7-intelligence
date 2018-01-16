@@ -154,7 +154,7 @@ final class WPCF7_Intel {
       );
       $value .= ' ' . Intel_Df::l(esc_html__('Change', self::$plugin_un), 'admin/config/intel/settings/form/default_tracking', $l_options);
       $items[] = '<tr>';
-      $items[] = '<th>' . esc_html__( 'Default submission even/goal', self::$plugin_un ) . '</th>';
+      $items[] = '<th>' . esc_html__( 'Default submission event/goal', self::$plugin_un ) . '</th>';
       $items[] = '<td>' . $value . '</td>';
       $items[] = '</tr>';
 
