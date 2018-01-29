@@ -15,7 +15,7 @@
 * Plugin Name:       Contact Form 7 Intelligence
 * Plugin URI:        http://intelligencewp.com/plugin/cf7-intelligence/
 * Description:       Integrates Intelligence with Contact Form 7 enabling easy Google Analytics goal tracking and visitor intelligence gathering.
-* Version:           1.0.5
+* Version:           1.0.6.0-dev
 * Author:            Tom McCracken
 * Author URI:        getlevelten.com/blog/tom
 * License:           GPL-2.0+
@@ -30,7 +30,100 @@ if ( ! defined( 'WPINC' ) ) {
   die;
 }
 
-define('WPCF7_INTEL_VER', '1.0.5');
+define('WPCF7_INTEL_VER', '1.0.6.0-dev');
+
+if (0) {
+// Create a helper function for easy SDK access.
+  function wpcf7_intel_fs() {
+    global $wpcf7_intel_fs;
+
+    if (!isset($wpcf7_intel_fs)) {
+      // Include Freemius SDK.
+      if (file_exists(dirname(dirname(__FILE__)) . '/intelligence/freemius/start.php')) {
+        // Try to load SDK from parent plugin folder.
+        require_once dirname(dirname(__FILE__)) . '/intelligence/freemius/start.php';
+      }
+      else {
+        if (file_exists(dirname(dirname(__FILE__)) . '/intelligence-premium/freemius/start.php')) {
+          // Try to load SDK from premium parent plugin folder.
+          require_once dirname(dirname(__FILE__)) . '/intelligence-premium/freemius/start.php';
+        }
+        else {
+          require_once dirname(__FILE__) . '/freemius/start.php';
+        }
+      }
+
+      $wpcf7_intel_fs = fs_dynamic_init(array(
+        'id' => '1676',
+        'slug' => 'cf7-intelligence',
+        'type' => 'plugin',
+        'public_key' => 'pk_24a97d212435dfaf0323e63dc851d',
+        'is_premium' => FALSE,
+        'has_paid_plans' => FALSE,
+        'parent' => array(
+          'id' => '1675',
+          'slug' => 'intelligence',
+          'public_key' => 'pk_cd3b6d95db54c50e50ccbf77112de',
+          'name' => 'Intelligence for WordPress',
+        ),
+        'menu' => array(
+          'slug' => 'intel_config',
+          'first-path' => 'admin.php?page=intel_config&plugin=wpcf7_intel&q=admin/config/intel/settings/setup/wpcf7_intel',
+          'account' => FALSE,
+          'support' => FALSE,
+        ),
+      ));
+    }
+
+    return $wpcf7_intel_fs;
+  }
+
+  function wpcf7_intel_fs_is_parent_active_and_loaded() {
+    // Check if the parent's init SDK method exists.
+    return function_exists('intel_fs');
+  }
+
+  function wpcf7_intel_fs_is_parent_active() {
+    $active_plugins_basenames = get_option('active_plugins');
+
+    foreach ($active_plugins_basenames as $plugin_basename) {
+      if (0 === strpos($plugin_basename, 'intelligence/') ||
+        0 === strpos($plugin_basename, 'intelligence-premium/')
+      ) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  function wpcf7_intel_fs_init() {
+    if (wpcf7_intel_fs_is_parent_active_and_loaded()) {
+      // Init Freemius.
+      wpcf7_intel_fs();
+
+      // Parent is active, add your init code here.
+    }
+    else {
+      // Parent is inactive, add your error handling here.
+    }
+  }
+
+  if (wpcf7_intel_fs_is_parent_active_and_loaded()) {
+    // If parent already included, init add-on.
+    wpcf7_intel_fs_init();
+  }
+  else {
+    if (wpcf7_intel_fs_is_parent_active()) {
+      // Init add-on only after the parent is loaded.
+      add_action('_loaded', 'wpcf7_intel_fs_init');
+    }
+    else {
+      // Even though the parent is not activated, execute add-on for activation / uninstall hooks.
+      wpcf7_intel_fs_init();
+    }
+  }
+}
 
 /**
  * Class NF_Intel
@@ -130,7 +223,7 @@ final class WPCF7_Intel {
     $connect_desc = __('Not connected.', self::$plugin_un);
     $connect_desc .= ' ' . sprintf(
         __( ' %sSetup Intelligence%s', self::$plugin_un ),
-        '<a href="/wp-admin/admin.php?page=intel_admin&plugin=' . self::$plugin_un . '&q=admin/config/intel/settings/setup/' . self::$plugin_un . '" class="button">', '</a>'
+        '<a href="/wp-admin/admin.php?page=intel_config&plugin=' . self::$plugin_un . '&q=admin/config/intel/settings/setup/' . self::$plugin_un . '" class="button">', '</a>'
       );
     if($this->is_intel_installed()) {
       $connect_desc = __('Connected');
@@ -193,7 +286,7 @@ final class WPCF7_Intel {
       _e('Contact Form 7 Intelligence plugin needs to be setup:', self::$plugin_un);
       echo ' ' . sprintf(
           __( ' %sSetup plugin%s', self::$plugin_un ),
-          '<a href="/wp-admin/admin.php?page=intel_admin&plugin=' . self::$plugin_un . '" class="button">', '</a>'
+          '<a href="/wp-admin/admin.php?page=intel_config&plugin=' . self::$plugin_un . '" class="button">', '</a>'
         );
 
       echo '</p>';
@@ -235,7 +328,7 @@ final class WPCF7_Intel {
     }
 
     add_menu_page(esc_html__("Intelligence", $plugin_un), esc_html__("Intelligence", $plugin_un), 'manage_options', 'intel_admin', array($this, 'intel_setup_page'), version_compare($wp_version, '3.8.0', '>=') ? 'dashicons-analytics' : '');
-    add_submenu_page('intel_admin', esc_html__("Setup", $plugin_un), esc_html__("Setup", $plugin_un), 'manage_options', 'intel_admin', array($this, 'intel_setup_page'));
+    add_submenu_page('intel_admin', esc_html__("Setup", $plugin_un), esc_html__("Setup", $plugin_un), 'manage_options', 'intel_config', array($this, 'intel_setup_page'));
 
     add_action('activated_plugin', array( $this, 'intel_setup_activated_plugin' ));
   }
@@ -356,7 +449,7 @@ function wpcf7_intel_form_edit_form($form, $form_state, $contact_form) {
   );
 
   $markup = '';
-  $markup .= '<h3>' . esc_html(esc_html__('Submission tracking', 'wpcf7_intel')) . '</h3>';
+  $markup .= '<h3>' . esc_html(esc_html__('Tracking', 'wpcf7_intel')) . '</h3>';
   $markup .= '<p>';
   $markup .= esc_html(esc_html__('Intelligence can automate triggering a goal or event upon form submission.', 'wpcf7_intel'));
   $markup .= ' ' . esc_html(esc_html__('Please use the below fields to configure how you want to track form submission in analytics.', 'wpcf7_intel'));
@@ -379,15 +472,15 @@ function wpcf7_intel_form_edit_form($form, $form_state, $contact_form) {
   $form['wpcf7_intel']['inline_wrapper_0'] = array(
     '#type' => 'markup',
     //'#markup' => '<style>.form-item-wpcf7-intel-tracking-event-name {display: inline;} .intel-add-goal-link {display: inline;} </style>',
-    '#markup' => '<style>.form-item-wpcf7-intel-tracking-event-name {display: inline-block;} div.intel-display-inline {display: inline-block;}</style><div class="intel-display-inline">',
+    '#markup' => '<style>.form-item-wpcf7-intel-track-submission {display: inline-block;} div.intel-display-inline {display: inline-block;}</style><div class="intel-display-inline">',
   );
 
   $options = intel_get_form_submission_eventgoal_options();
-  $form['wpcf7_intel']['tracking_event_name'] = array(
+  $form['wpcf7_intel']['track_submission'] = array(
     '#type' => 'select',
-    '#title' => esc_html__('Tracking event/goal', 'wpcf7_intel'),
+    '#title' => esc_html__('Submission event/goal', 'wpcf7_intel'),
     '#options' => $options,
-    '#default_value' => !empty($settings['tracking_event_name']) ? $settings['tracking_event_name'] : '',
+    '#default_value' => !empty($settings['track_submission']) ? $settings['track_submission'] : '',
     '#description' => esc_html__('Select the goal or event you would like to trigger to be tracked in analytics when a form is submitted.', 'wpcf7_intel'),
     '#suffix' => '<div class="intel-display-inline" style="vertical-align: bottom; margin-bottom: 15px;">' . $add_goal . '</div>',
   );
@@ -406,13 +499,26 @@ function wpcf7_intel_form_edit_form($form, $form_state, $contact_form) {
 
   $desc = esc_html__('Each goal has a default site wide value set in the Intelligence goal settings, but you can override that value per form.', 'wpcf7_intel');
   $desc .= esc_html__('If you would like to use a custom goal/event value, enter it here otherwise leave the field blank to use the site defaults.', 'wpcf7_intel');
-  $form['wpcf7_intel']['tracking_event_value'] = array(
+  $form['wpcf7_intel']['track_submission_value'] = array(
     '#type' => 'textfield',
-    '#title' => esc_html__('Tracking value override', 'wpcf7_intel'),
-    '#default_value' => !empty($settings['tracking_event_value']) ? $settings['tracking_event_value'] : '',
+    '#title' => esc_html__('Submission value', 'wpcf7_intel'),
+    '#default_value' => !empty($settings['track_submission_value']) ? $settings['track_submission_value'] : '',
     '#description' => $desc,
     '#size' => 8,
   );
+
+  /*
+  $desc = esc_html__('Will trigger a "Form view" event when a page is hit that includes the form.', 'wpcf7_intel');
+  //$desc .= esc_html__('If you would like to use a custom goal/event value, enter it here otherwise leave the field blank to use the site defaults.', 'wpcf7_intel');
+  $options = intel_get_form_view_options();
+  $form['wpcf7_intel']['track_view'] = array(
+    '#type' => 'select',
+    '#title' => esc_html__('Track form views', 'wpcf7_intel'),
+    '#options' => $options,
+    '#default_value' => !empty($settings['track_view']) ? $settings['track_view'] : '',
+    '#description' => $desc,
+  );
+  */
 
   $markup = '';
   $markup .= '<h3>' . esc_html__( 'Contact profile', 'wpcf7_intel' ) . '</h3>';
@@ -549,17 +655,19 @@ function wpcf7_intel_wpcf7_form_edit_form_submit($args) {
   //Intel_Df::watchdog('cf7 form submit POST', print_r($_POST, 1));
 
   // sanitize inputs
-  $_POST['wpcf7_intel']['tracking_event_name'] = sanitize_text_field($_POST['wpcf7_intel']['tracking_event_name']);
-  $_POST['wpcf7_intel']['tracking_event_value'] = trim(sanitize_text_field($_POST['wpcf7_intel']['tracking_event_value']));
+  $_POST['wpcf7_intel']['track_submission'] = sanitize_text_field($_POST['wpcf7_intel']['track_submission']);
 
-  if ($_POST['wpcf7_intel']['tracking_event_value'] !== '') {
-    if (!is_numeric($_POST['wpcf7_intel']['tracking_event_value'])) {
-      $_POST['wpcf7_intel']['tracking_event_value'] = '';
+  $_POST['wpcf7_intel']['track_submission_value'] = trim(sanitize_text_field($_POST['wpcf7_intel']['track_submission_value']));
+  if ($_POST['wpcf7_intel']['track_submission_value'] !== '') {
+    if (!is_numeric($_POST['wpcf7_intel']['track_submission_value'])) {
+      $_POST['wpcf7_intel']['track_submission_value'] = '';
     }
     else {
-      $_POST['wpcf7_intel']['tracking_event_value'] = intval($_POST['wpcf7_intel']['tracking_event_value']);
+      $_POST['wpcf7_intel']['track_submission_value'] = intval($_POST['wpcf7_intel']['track_submission_value']);
     }
   }
+
+  //$_POST['wpcf7_intel']['track_view'] = sanitize_text_field($_POST['wpcf7_intel']['track_view']);
 
   foreach ($_POST['wpcf7_intel']['field_map'] as $k => $v) {
     $_POST['wpcf7_intel']['field_map'][$k] = sanitize_text_field($v);
@@ -602,6 +710,7 @@ function wpcf7_intel_wpcf7_form_response_output($output, $class, $content, $inst
   return $output;
 }
 */
+
 
 add_action('wpcf7_before_send_mail', 'wpcf7_intel_wpcf7_before_send_mail');
 function wpcf7_intel_wpcf7_before_send_mail($obj) {
@@ -708,6 +817,107 @@ function wpcf7_intel_wpcf7_display_message($message, $status) {
 
   return $message;
 }
+
+/**
+ * Implements hook_intel_form_type_info()
+ */
+function wpcf7_intel_form_type_info($info = array()) {
+  $info['wpcf7'] = array(
+    'title' => __( 'Contact Form 7', 'contact-form-7' ),
+    'plugin' => array(
+      'name' => __( 'Contact Form 7', 'contact-form-7' ),
+      'slug' => 'contact-form-7',
+      'text_domain' => 'contact-form-7',
+    ),
+    //'submission_data_callback' => 'wpcf7_intel_form_type_submission_data',
+  );
+  return $info;
+}
+// Register hook_intel_form_type_forms_info()
+add_filter('intel_form_type_info', 'wpcf7_intel_form_type_info');
+
+/**
+ * Implements hook_intel_form_type_FORM_TYPE_UN_form_data()
+ */
+function wpcf7_intel_form_type_form_info($data = NULL, $options = array()) {
+  $info = &Intel_Df::drupal_static( __FUNCTION__, array());
+  if (!empty($data) && empty($options['refresh'])) {
+    return $data;
+  }
+
+  $args = array(
+    'post_type'   => 'wpcf7_contact_form'
+  );
+
+  $posts = get_posts( $args );
+
+  foreach ($posts as $k => $post) {
+    $row = array(
+      'settings' => array(),
+    );
+    $row['id'] = $post->ID;
+    $row['title'] = $post->post_title;
+    $options = get_option('wpcf7_intel_form_settings_' . $post->ID, array());
+
+    if (!empty($options)) {
+
+      if (!empty($options['track_submission'])) {
+        $labels = intel_get_form_submission_eventgoal_options();
+        $row['settings']['track_submission'] = $options['track_submission'];
+        $row['settings']['track_submission__title'] = !empty($labels[$options['track_submission']]) ? $labels[$options['track_submission']] : $options['track_submission'];
+      }
+
+      if (!empty($options['track_submission_value'])) {
+        $row['settings']['track_submission_value'] = $options['track_submission_value'];
+      }
+
+      $row['settings']['field_map'] = array();
+      if (!empty($options['field_map']) && is_array($options['field_map'])) {
+        foreach ($options['field_map'] as $k => $v) {
+          if (!empty($v)) {
+            $row['settings']['field_map'][] = $v;
+          }
+        }
+      }
+
+    }
+
+    $row['settings_url'] = '/wp-admin/admin.php?page=wpcf7&action=edit&post=' . $row['id'] . '#intel';
+    $info[$post->ID] = $row;
+  }
+
+  return $info;
+
+  foreach ($ninja_forms as $k => $form) {
+    $row = array();
+    $row['id'] = $form->get_id();
+    $row['title'] = $form->get_setting('title', Intel_Df::t('(not set)'));
+    $row['settings_url'] = '/wp-admin/admin.php?page=ninja-forms&form_id=' . $row['id'];
+    $row['settings'] = array();
+
+    $actions = Ninja_Forms()->form( $row['id'] )->get_actions();
+
+    foreach ($actions as $action) {
+      $action_settings = $action->get_settings();
+
+      if ($action_settings['type'] == 'intel') {
+        if (!empty($action_settings['intel_track_submission'])) {
+          $name = $action_settings['intel_track_submission'];
+          $row['settings']['track_submission'] = !empty($intel_eventgoal_options[$name]) ? $intel_eventgoal_options[$name] : $name;
+        }
+        if (!empty($action_settings['intel_track_submission_value'])) {
+          $row['settings']['track_submission_value'] = $action_settings['intel_track_submission_value'];
+        }
+      }
+    }
+
+    $data[$row['id']] = $row;
+  }
+
+  return $data;
+}
+// Register hook_intel_form_type_form_info()
+add_filter('intel_form_type_wpcf7_form_info', 'wpcf7_intel_form_type_form_info');
 
 add_filter('intel_form_type_forms_info', 'wpcf7_intel_form_type_forms_info');
 function wpcf7_intel_form_type_forms_info($info) {

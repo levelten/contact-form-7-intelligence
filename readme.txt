@@ -4,7 +4,7 @@ Donate link: getlevelten.com/blog/tom
 Tags: analytics, contact, contact form, form, google analytics, marketing, metrics, stats, tracking, web form
 Requires at least: 4.5
 Tested up to: 4.9
-Stable tag: 1.0.5
+Stable tag: 1.0.6.0-dev
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,7 +25,7 @@ Google Analytics goal tracking for Contact Form 7 made easy.
 * No coding required
 * No advanced Google Analytics skills needed
 * No Google Tag Manager setup needed
-* 5 minute installation 
+* 5 minute installation
 
 https://www.youtube.com/watch?v=6vFl4hbPkfQ&rel=0
 
