@@ -397,6 +397,47 @@ function wpcf7_intel() {
 }
 wpcf7_intel();
 
+/*
+function wpcf7_intel_install() {
+  require_once plugin_dir_path( __FILE__ ) . 'wpcf7-intel.install';
+  wpcf7_intel_install();
+}
+register_uninstall_hook( __FILE__, 'wpcf7_intel_install' );
+*/
+
+function wpcf7_intel_activation() {
+  if (is_callable('intel_activate_plugin')) {
+    intel_activate_plugin('wpcf7_intel');
+  }
+}
+register_activation_hook( __FILE__, 'wpcf7_intel_activation' );
+
+function _wpcf7_intel_uninstall() {
+  require_once plugin_dir_path( __FILE__ ) . 'wpcf7-intel.install';
+  wpcf7_intel_uninstall();
+}
+register_uninstall_hook( __FILE__, '_wpcf7_intel_uninstall' );
+
+/**
+ * Implements hook_intel_system_info()
+ *
+ * Registers plugin with intel_system
+ *
+ * @param array $info
+ * @return array
+ */
+function wpcf7_intel_intel_system_info($info = array()) {
+  $info['wpcf7_intel'] = array(
+    'plugin_file' => 'wpcf7-intel.php', // Main plugin file
+    'plugin_path' => WPCF7_Intel::$dir, // The path to the directory containing file
+    'update_file' => 'wpcf7-intel.install', // default [plugin_un].install
+  );
+  return $info;
+}
+add_filter('intel_system_info', 'wpcf7_intel_intel_system_info');
+
+
+
 add_filter('wpcf7_editor_panels', 'wpcf7_intel_wpcf7_editor_panels');
 function wpcf7_intel_wpcf7_editor_panels($panels) {
 
@@ -817,6 +858,8 @@ function wpcf7_intel_wpcf7_display_message($message, $status) {
 
   return $message;
 }
+
+
 
 /**
  * Implements hook_intel_form_type_info()
