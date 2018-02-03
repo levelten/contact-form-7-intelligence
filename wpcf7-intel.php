@@ -15,7 +15,7 @@
 * Plugin Name:       Contact Form 7 Intelligence
 * Plugin URI:        http://intelligencewp.com/plugin/cf7-intelligence/
 * Description:       Integrates Intelligence with Contact Form 7 enabling easy Google Analytics goal tracking and visitor intelligence gathering.
-* Version:           1.0.6.0-dev
+* Version:           1.0.6
 * Author:            Tom McCracken
 * Author URI:        getlevelten.com/blog/tom
 * License:           GPL-2.0+
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
   die;
 }
 
-define('WPCF7_INTEL_VER', '1.0.6.0-dev');
+define('WPCF7_INTEL_VER', '1.0.6');
 
 if (0) {
 // Create a helper function for easy SDK access.
@@ -794,21 +794,21 @@ function wpcf7_intel_wpcf7_before_send_mail($obj) {
   //Intel_Df::watchdog('wpcf7_intel_wpcf7_before_send_mail submission_values', print_r($vars['submission_values'], 1));
 
   // if tracking event/value settings are empty, use defaults
-  if (empty($settings['tracking_event_name'])) {
-    $settings['tracking_event_name'] = get_option('intel_form_submission_tracking_event_name_default', 'form_submission');
+  if (empty($settings['track_submission'])) {
+    $settings['track_submission'] = get_option('intel_form_track_submission_default', 'form_submission');
   }
-  if (!empty($settings['tracking_event_value'])) {
-    $settings['tracking_event_value'] = get_option('intel_form_submission_tracking_event_value_default', '');
+  if (!empty($settings['track_submission_value'])) {
+    $settings['track_submission_value'] = get_option('intel_form_track_submission_value_default', '');
   }
 
-  if (!empty($settings['tracking_event_name'])) {
-    $track['name'] = $settings['tracking_event_name'];
+  if (!empty($settings['track_submission'])) {
+    $track['name'] = $settings['track_submission'];
     if (substr($track['name'], -1) == '-') {
       $track['name'] = substr($track['name'], 0, -1);
       $track['valued_event'] = 0;
     }
-    if (!empty($settings['tracking_event_value'])) {
-      $track['value'] = $settings['tracking_event_value'];
+    if (!empty($settings['track_submission_value'])) {
+      $track['value'] = $settings['track_submission_value'];
     }
   }
 
