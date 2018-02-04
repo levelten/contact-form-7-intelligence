@@ -13,11 +13,11 @@
 *
 * @wordpress-plugin
 * Plugin Name:       Contact Form 7 Intelligence
-* Plugin URI:        http://intelligencewp.com/plugin/cf7-intelligence/
+* Plugin URI:        https://wordpress.org/plugins/cf7-intelligence
 * Description:       Integrates Intelligence with Contact Form 7 enabling easy Google Analytics goal tracking and visitor intelligence gathering.
-* Version:           1.0.6
-* Author:            Tom McCracken
-* Author URI:        getlevelten.com/blog/tom
+* Version:           1.0.7
+* Author:            LevelTen
+* Author URI:        https://intelligencewp.com
 * License:           GPL-2.0+
 * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
 * Text Domain:       wpcf7_intel
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
   die;
 }
 
-define('WPCF7_INTEL_VER', '1.0.6');
+define('WPCF7_INTEL_VER', '1.0.7');
 
 if (0) {
 // Create a helper function for easy SDK access.
@@ -239,7 +239,7 @@ final class WPCF7_Intel {
 
     if ($this->is_intel_installed()) {
       $eventgoal_options = intel_get_form_submission_eventgoal_options();
-      $default_name = get_option('intel_form_submission_tracking_event_name_default', 'form_submission');
+      $default_name = get_option('intel_form_track_submission_default', 'form_submission');
       $value = !empty($eventgoal_options[$default_name]) ? $eventgoal_options[$default_name] : Intel_Df::t('(not set)');
       $l_options = Intel_Df::l_options_add_destination('wp-admin/admin.php?page=wpcf7_intel');
       $l_options['attributes'] = array(
@@ -251,7 +251,7 @@ final class WPCF7_Intel {
       $items[] = '<td>' . $value . '</td>';
       $items[] = '</tr>';
 
-      $default_value = get_option('intel_form_submission_tracking_event_value_default', '');
+      $default_value = get_option('intel_form_track_submission_value_default', '');
       $items[] = '<tr>';
       $items[] = '<th>' . esc_html__( 'Default submission value', self::$plugin_un ) . '</th>';
       $items[] = '<td>' . (!empty($default_value) ? $default_value : Intel_Df::t('(default)')) . '</td>';
