@@ -31,6 +31,7 @@ function wpcf7_intel_uninstall() {
 	if (is_callable('intel_uninstall_plugin')) {
 		intel_uninstall_plugin('wpcf7_intel');
 	}
+
 }
 
 /**
