@@ -106,3 +106,6 @@ No notices
 = 1.0.6 =
 * Support for intel_system API
 * Support for intel_form_type API
+
+= 1.0.7 =
+* Refined setup process
