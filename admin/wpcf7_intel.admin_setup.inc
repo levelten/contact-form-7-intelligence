@@ -11,7 +11,7 @@ include_once INTEL_DIR . 'admin/intel.admin_setup.inc';
 function wpcf7_intel_admin_setup_wizard_info($items = array()) {
   $sys_meta = get_option('intel_system_meta', array());
   $info = array(
-    'title' => __('Contact Form 7 Intelligence setup'),
+    'title' => __('Contact Form 7 GA Intelligence setup'),
     'un' => 'wpcf7_intel_setup',
     'callback_prefix' => 'wpcf7_intel_admin_setup',
     'steps' => array(),

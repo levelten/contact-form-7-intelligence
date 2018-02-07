@@ -11,6 +11,7 @@
     top: 0;
     right: 0;
     width: auto;
+    margin-left: 0;
 }
 
 .intel-setup .plugin-card.action-buttons-only .action-links .plugin-action-buttons {
@@ -18,6 +19,7 @@
 }
 
 .intel-setup .plugin-card.action-buttons-only ul.plugin-action-buttons {
+    margin-top: 0;
     margin-left: 0;
 }
 
@@ -38,6 +40,29 @@
     background-color: #5cb85c !important;
     border-color: #4cae4c !important;
     text-shadow: none !important;
+}
+
+.intel-setup div.logo {
+    clear: both;
+    content: "";
+    display: block;
+    background-image: url(../images/icon-128x128.png);
+    background-size: 128px 128px;
+    background-repeat: no-repeat;
+    background-position: 0 45%;
+    width: 128px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 5px;
+}
+
+.intel-setup div.welcome-panel-content {
+    margin-left: 138px;
+}
+
+.intel-setup div.welcome-panel-content .get-started {
+    margin-bottom: 0.5em;
 }
 
 

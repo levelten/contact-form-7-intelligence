@@ -1,6 +1,6 @@
 <?php
 /**
-* Contact Form 7 Intelligence bootstrap file
+* Contact Form 7 Google Analytics Intelligence bootstrap file
 *
 * This file is read by WordPress to generate the plugin information in the plugin
 * admin area. This file also includes all of the dependencies used by the plugin,
@@ -12,10 +12,10 @@
 * @package           Intelligence
 *
 * @wordpress-plugin
-* Plugin Name:       Contact Form 7 Intelligence
+* Plugin Name:       Contact Form 7 Google Analytics Intelligence
 * Plugin URI:        https://wordpress.org/plugins/cf7-intelligence
 * Description:       Integrates Intelligence with Contact Form 7 enabling easy Google Analytics goal tracking and visitor intelligence gathering.
-* Version:           1.0.7
+* Version:           1.0.8
 * Author:            LevelTen
 * Author URI:        https://intelligencewp.com
 * License:           GPL-2.0+
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
   die;
 }
 
-define('WPCF7_INTEL_VER', '1.0.7');
+define('WPCF7_INTEL_VER', '1.0.8');
 
 if (0) {
 // Create a helper function for easy SDK access.
@@ -283,7 +283,7 @@ final class WPCF7_Intel {
       echo '<p>';
       echo '<strong>' . __('Notice:') . '</strong> ';
 
-      _e('Contact Form 7 Intelligence plugin needs to be setup:', self::$plugin_un);
+      _e('Contact Form 7 Google Analytics Intelligence plugin needs to be setup:', self::$plugin_un);
       echo ' ' . sprintf(
           __( ' %sSetup plugin%s', self::$plugin_un ),
           '<a href="/wp-admin/admin.php?page=intel_config&plugin=' . self::$plugin_un . '" class="button">', '</a>'
@@ -298,7 +298,7 @@ final class WPCF7_Intel {
       echo '<div class="error">';
       echo '<p>';
       echo '<strong>' . __('Notice:') . '</strong> ';
-      _e('The Contact Form 7 Intelligence plugin requires the Contact Form 7 plugin to be installed and active.', self::$plugin_un);
+      _e('The Contact Form 7 Google Analytics Intelligence plugin requires the Contact Form 7 plugin to be installed and active.', self::$plugin_un);
       echo '</p>';
       echo '</div>';
       return;
@@ -355,22 +355,47 @@ final class WPCF7_Intel {
 
     $items = array();
 
-    $items[] = '<h1>' . __('Contact Form 7 Intelligence Setup', self::$plugin_un) . '</h1>';
-    $items[] = __('To continue with the setup please install the Intelligence plugin.', self::$plugin_un);
+    $items[] = '<div class="wrap">';
 
-    $items[] = "<br>\n<br>\n";
+    $items[] = '<h1>' . __('Contact Form 7 Google Analytics Intelligence Setup', self::$plugin_un) . '</h1>';
+
+    $items[] = '<div id="welcome-panel" class="welcome-panel intel-setup">';
+
+    $items[] = '<div class="logo"></div>';
+
+    $items[] = '<div class="welcome-panel-content">';
+
+    $items[] = '<h2>' . __('Welcome to Smarter Google Analytics!', self::$plugin_un) . '</h2>';
+    $items[] = '<p class="about-description">';
+    $items[] = __('Your moments away from enhanced Contact Form 7 tracking', self::$plugin_un);
+
+    $items[] = '</p>';
+
+    $items[] = '<p>' . __('First we need to install the Intelligence framework plugin.', self::$plugin_un);
+    $items[] = '<br>' . __('It\'s what makes the magic.', self::$plugin_un);
+    $items[] = '</p>';
+
+    $items[] = '<h3 class="get-started">' . __('Get Started', self::$plugin_un) . '</h3>';
 
     $vars = array(
       'plugin_slug' => 'intelligence',
       'card_class' => array(
         'action-buttons-only'
       ),
+      'install_link_install_text' => __('Install Intelligence', self::$plugin_un),
+      'install_link_activate_text' => __('Activate Intelligence', self::$plugin_un),
       //'activate_url' => $activate_url,
     );
+    $vars['install_link_install_class'] = $vars['install_link_activate_class'] = array('button-primary');
     $vars = intel_setup_process_install_plugin_card($vars);
 
     $items[] = '<div class="intel-setup">';
     $items[] = intel_setup_theme_install_plugin_card($vars);
+    $items[] = '</div>';
+    $items[] = '<br><br>';
+
+    $items[] = '</div>';
+    $items[] = '</div>';
     $items[] = '</div>';
 
     return implode(' ', $items);
@@ -379,7 +404,7 @@ final class WPCF7_Intel {
   public function intel_menu($items = array()) {
     $items['admin/config/intel/settings/setup/' . self::$plugin_un] = array(
       'title' => 'Setup',
-      'description' => Intel_Df::t('Contact Form 7 Intelligence initial plugin setup'),
+      'description' => Intel_Df::t('Contact Form 7 Google Analytics Intelligence initial plugin setup'),
       'page callback' => 'wpcf7_intel_admin_setup_page',
       'access callback' => 'user_access',
       'access arguments' => array('admin intel'),
@@ -1005,50 +1030,3 @@ function wpcf7_intel_form_type_form_setup($data, $info) {
 
   return $data;
 }
-
-/*
- *
- */
-/*
-// dependencies notices
-add_action( 'admin_notices', 'wpcf7_intel_plugin_dependency_notice' );
-function wpcf7_intel_plugin_dependency_notice() {
-  global $pagenow;
-  // Short-circuit it.
-  if ( 'plugins.php' != $pagenow ) {
-    return;
-  }
-
-  // check dependencies
-  if (!function_exists('intel_is_plugin_active')) {
-    echo wpcf7_intel_error_msg_missing_intel(array('notice' => 1));
-    return;
-  }
-
-  if (!intel_is_plugin_active('wpcf7')) {
-    echo '<div class="error">';
-    echo '<p>';
-    echo '<strong>' . __('Notice:') . '</strong> ';
-    _e('The Contact Form 7 Intelligence plugin requires the Contact Form 7 plugin to be installed and active.');
-    echo '</p>';
-    echo '</div>';
-    return;
-  }
-}
-
-function wpcf7_intel_error_msg_missing_intel($options = array()) {
-  $msg = '';
-
-  if (!empty($options['notice'])) {
-    $msg .=  '<div class="error">';
-  }
-  $msg .=  '<p>';
-  $msg .=  '<strong>' . __('Notice:') . '</strong> ';
-  $msg .=  __('The Contact Form 7 Intelligence plugin requires the Intelligence plugin to be installed and active.');
-  $msg .=  '</p>';
-  if (!empty($options['notice'])) {
-    $msg .=  '</div>';
-  }
-  return $msg;
-}
-*/
