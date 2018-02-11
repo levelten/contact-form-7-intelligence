@@ -9,18 +9,12 @@ include_once INTEL_DIR . 'includes/intel.wizard.inc';
 include_once INTEL_DIR . 'admin/intel.admin_setup.inc';
 
 function wpcf7_intel_admin_setup_wizard_info($items = array()) {
-  $sys_meta = get_option('intel_system_meta', array());
+
   $info = array(
     'title' => __('Contact Form 7 GA Intelligence setup'),
     'un' => 'wpcf7_intel_setup',
     'callback_prefix' => 'wpcf7_intel_admin_setup',
     'steps' => array(),
-  );
-  $info['steps']['start'] = array(
-    'title' => Intel_Df::t('Start'),
-    'submit_button_text' => Intel_Df::t('Start setup'),
-    'submit_button_pre_text' => Intel_Df::t('when ready, click'),
-    'action_img_src' => INTEL_URL . '/images/setup_start_action.png',
   );
 
   $info['steps']['intel_plugin'] = array(
@@ -54,91 +48,12 @@ function wpcf7_intel_admin_setup_page() {
   return Intel_Df::render($form);
 }
 
-function wpcf7_intel_admin_setup_start($form, &$form_state) {
-  $f = array();
-
-  $markup = '';
-  $markup .= '<div class="row">';
-  $markup .= '<div class="col-xs-7">';
-  $f['markup_0'] = array(
-    '#type' => 'markup',
-    '#markup' => $markup,
-  );
-
-  $items = array();
-  $items[] = '<div class="text-center">';
-  $items[] = '<h3>' . Intel_Df::t('Results oriented Google Analytics made easy.') . '</h3>';
-  $items[] = '<h4 class="lead text-muted">' . Intel_Df::t('measure what matters!') . '</h4>';
-  $items[] = '<p>';
-  $items[] = Intel_Df::t('The Intelligence setup wizard will walk you through the steps for setting up enhanced Google Analytics.');
-  $l_options = array(
-    'fragment' => 'setup-wizard',
-    'attributes' => array(
-      'target' => 'intelligencewp',
-    )
-  );
-  $items[] = Intel_Df::t('For an overview of the process, see the !link.', array(
-    '!link' => Intel_Df::l( Intel_Df::t('Installation Guide'), 'https://intelligencewp.com/doc/installation', $l_options)
-  ));
-  $items[] = '</p>';
-
-  //$items[] = '<p>';
-  //$items[] = Intel_Df::t('Intelligence extends standard Google Analytics to enable you to measure what really matters such as conversions and engagement.');
-  //$items[] = Intel_Df::t('Our goal is to help you understand the true value (ROI) of your website and its components, empowering more insightful marketing, content, UX, and features.');
-  //$items[] = '</p>';
-/*
-  $items[] = '<p>';
-  $items[] = Intel_Df::t('After completing each step, click the <em>Next step</em> button to proceed.', array(), array('html' => 1));
-  $items[] = Intel_Df::t('The wizard will save your progress so you can leave and come back at anytime right to where you left off.');
-  //$items[] = Intel_Df::t('Click the <em>Next</em> button to begin.');
-  $items[] = '</p>';
-*/
-  $items[] = '</div>';
-
-  $f['instructions'] = array(
-    '#type' => 'markup',
-    '#markup' => implode(' ', $items),
-  );
-
-
-  $markup = '';
-  $markup .= '</div>';
-  $markup .= '<div class="col-xs-5">';
-  $markup .= '<image src="' . INTEL_URL . '/images/setup_start_right.png" class="img-responsive" >';
-  $markup .= '</div>';
-  $markup .= '</div>';
-  $f['markup_1'] = array(
-    '#type' => 'markup',
-    '#markup' => $markup,
-  );
-
-  return $f;
-}
-
-function wpcf7_intel_admin_setup_start_check($form, &$form_state) {
-  $status = array();
-
-  $status['success'] = 1;
-
-  return $status;
-}
-
-function wpcf7_intel_admin_setup_start_submit($form, &$form_state) {
-  $values = $form_state['values'];
-
-  $wizard_state = &$form_state['wizard_state'];
-  if (!in_array('start', $wizard_state['successes'])) {
-    $wizard_state['successes'][] = 'start';
-  }
-}
-
 function wpcf7_intel_admin_setup_intel_plugin($form, &$form_state) {
   $f = array();
 
-  //$instructions = wpcf7_intel_admin_setup_intel_plugin_instructions();
+  include_once wpcf7_intel()->dir . 'wpcf7_intel.setup.inc';
 
-  $instructions = NF_Intel()->setup_intel_plugin_instructions();
-
+  $instructions = wpcf7_intel_setup()->intel_install_instructions();
 
   $f['instructions'] = array(
     '#type' => 'markup',
@@ -299,10 +214,17 @@ function wpcf7_intel_admin_setup_finish($form, &$form_state) {
   $items = array();
 
   $items[] = '<div class="text-center">';
-  $items[] = '<h3>' . Intel_Df::t('Congratulations!') . '</h3>';
+  $items[] = '<h3>' . Intel_Df::t('Congratulations') . '</h3>';
 
   $items[] = '<p>';
-  $items[] = __('Your Contact Form 7 submission are now being tracked.', 'wpcf7_intel');
+  $items[] = __('Your Contact Form 7 submission are now being tracked!', 'wpcf7_intel');
+  $items[] = '</p>';
+
+  $items[] = '<p>';
+  $items[] = '<strong>' . Intel_Df::t('Go ahead, give it a try:') . '</strong>';
+  $l_options = Intel_Df::l_options_add_class('btn btn-info');
+  $items[] = '<br>' . Intel_Df::l( Intel_Df::t('Test your form tracking'), 'admin/help/demo/wpcf7_intel', $l_options);
+  //$items[] = '<br>' . Intel_Df::t('(click on tracked links and forms to trigger events)');
   $items[] = '</p>';
 
 

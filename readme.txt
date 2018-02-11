@@ -4,7 +4,7 @@ Donate link: getlevelten.com/blog/tom
 Tags: analytics, contact, contact form, form, google analytics, marketing, metrics, stats, tracking, web form
 Requires at least: 4.5
 Tested up to: 4.9.2
-Stable tag: 1.0.8
+Stable tag: 1.0.9.0-dev
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,6 +106,3 @@ No notices
 = 1.0.6 =
 * Support for intel_system API
 * Support for intel_form_type API
-
-= 1.0.7 =
-* Refined setup process
