@@ -217,7 +217,7 @@ function wpcf7_intel_admin_setup_finish($form, &$form_state) {
   $items[] = '<h3>' . Intel_Df::t('Congratulations') . '</h3>';
 
   $items[] = '<p>';
-  $items[] = __('Your Contact Form 7 submission are now being tracked!', 'wpcf7_intel');
+  $items[] = __('Your Contact Form 7 submissions are now being tracked!', 'wpcf7_intel');
   $items[] = '</p>';
 
   $items[] = '<p>';
@@ -229,9 +229,9 @@ function wpcf7_intel_admin_setup_finish($form, &$form_state) {
 
 
   $items[] = '<p>';
-  $items[] = Intel_Df::t(__('To customize form tracking settings in !gf_link or view the !intel_link.', 'wpcf7_intel'),
+  $items[] = Intel_Df::t(__('You can customize form tracking in !extends_link settings or view the !intel_link.', 'wpcf7_intel'),
     array(
-      '!gf_link' => Intel_Df::l(__('Contact Form 7', 'wpcf7_intel'), 'wp-admin/admin.php?page=wpcf7'),
+      '!extends_link' => Intel_Df::l(__('Contact Form 7', 'wpcf7_intel'), 'wp-admin/admin.php?page=wpcf7'),
       '!intel_link' => Intel_Df::l(__('Intelligence form settings list', 'wpcf7_intel'), 'admin/config/intel/settings/form'),
     ));
   $items[] = '</p>';
