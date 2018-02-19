@@ -447,7 +447,22 @@ final class WPCF7_Intel {
     $output .= '</div>'; // end card-block
     $output .= '</div>'; // end card
 
-    //$output .= '<br><br>' . Intel_Df::l(Intel_Df::t('Demo Blog Post A'), 'intelligence/demo/blog/alpha');
+    // Demo mode alert
+    $notice_vars = array(
+      'inline' => 1,
+      'type' => 'info',
+    );
+    $mode = $demo_mode ? __('enabled') : __('disabled');
+    $notice_vars['message'] = __('Demo pages for anonymous users are currently ', $this->plugin_un) . '<strong>' . $mode . '</strong>.';
+    $l_options = Intel_Df::l_options_add_class('btn btn-default');
+    $l_options = Intel_Df::l_options_add_destination(Intel_Df::current_path(), $l_options);
+    $notice_vars['message'] .= ' ' . Intel_Df::l(__('Change demo settings', $this->plugin_un), 'admin/config/intel/settings/general/demo', $l_options);
+
+    $output .= '<div class="card">';
+    $output .= '<div class="card-block clearfix">';
+    $output .= $notice_vars['message'];
+    $output .= '</div>'; // end card-block
+    $output .= '</div>'; // end card
 
     return $output;
   }
@@ -507,7 +522,7 @@ final class WPCF7_Intel {
     );
     if (!$this->is_intel_installed('min')) {
       require_once( $this->dir . $this->plugin_un . '.setup.inc' );
-      $screen_vars['content'] = intel_example_addon_setup()->get_plugin_setup_notice(array('inline' => 1));
+      $screen_vars['content'] = wpcf7_intel_setup()->get_plugin_setup_notice(array('inline' => 1));
       print intel_setup_theme('setup_screen', $screen_vars);
       return;
     }
@@ -592,8 +607,10 @@ final class WPCF7_Intel {
 
     //$submission_goals = intel_get_event_goal_info('submission');
 
+    $fid = $contact_form->id();
+
     $default_settings = array();
-    $settings = get_option('wpcf7_intel_form_settings_' . $contact_form->id(), array());
+    $settings = get_option('wpcf7_intel_form_settings_' . $fid, array());
 
     intel()->admin->enqueue_scripts();
     intel()->admin->enqueue_styles();
@@ -620,13 +637,13 @@ final class WPCF7_Intel {
     );
 
     // create add goal link
-    $id = !empty($_GET['post']) ? $_GET['post'] : '';
+    $pid = !empty($_GET['post']) ? $_GET['post'] : '';
     $l_options = array(
       'attributes' => array(
         'class' => array('button', 'intel-add-goal'),
       )
     );
-    $l_options = Intel_Df::l_options_add_destination('wp-admin/admin.php?page=wpcf7&action=edit&post=' . $id . '#intel', $l_options);
+    $l_options = Intel_Df::l_options_add_destination('wp-admin/admin.php?page=wpcf7&action=edit&post=' . $pid . '#intel', $l_options);
     $add_goal = Intel_Df::l( '+' . Intel_Df::t('Add goal'), 'admin/config/intel/settings/goal/add', $l_options);
 
     $form['wpcf7_intel']['inline_wrapper_0'] = array(
