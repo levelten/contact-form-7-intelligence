@@ -15,7 +15,7 @@
 * Plugin Name:       Contact Form 7 Google Analytics Intelligence
 * Plugin URI:        https://wordpress.org/plugins/cf7-intelligence
 * Description:       Integrates Intelligence with Contact Form 7 enabling easy Google Analytics goal tracking and visitor intelligence gathering.
-* Version:           1.0.9.0-dev
+* Version:           1.0.9
 * Author:            LevelTen
 * Author URI:        https://intelligencewp.com
 * License:           GPL-2.0+
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
   die;
 }
 
-define('WPCF7_INTEL_VER', '1.0.9.0-dev');
+define('WPCF7_INTEL_VER', '1.0.9');
 
 if (0) {
 // Create a helper function for easy SDK access.
@@ -478,6 +478,7 @@ final class WPCF7_Intel {
       'post_content' => $content,
       'intel_demo' => array(
         'url' => 'intelligence/demo/wpcf7_intel',
+        'overridable' => 0,
       ),
     );
 

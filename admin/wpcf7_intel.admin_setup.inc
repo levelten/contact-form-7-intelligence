@@ -53,7 +53,7 @@ function wpcf7_intel_admin_setup_intel_plugin($form, &$form_state) {
 
   include_once wpcf7_intel()->dir . 'wpcf7_intel.setup.inc';
 
-  $instructions = wpcf7_intel_setup()->intel_install_instructions();
+  $instructions = wpcf7_intel_setup()->get_intel_install_instructions();
 
   $f['instructions'] = array(
     '#type' => 'markup',
