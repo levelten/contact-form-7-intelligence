@@ -10,7 +10,7 @@
  */
 
 if (!is_callable('intel_setup')) {
-	include_once wpcf7_intel()->dir . 'intel_com/intel.setup.inc';
+	include_once wpcf7_intel()->dir . 'intel_com/intel.setup.php';
 }
 
 class WPCF7_Intel_Setup extends Intel_Setup {

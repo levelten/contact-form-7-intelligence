@@ -257,7 +257,7 @@ final class WPCF7_Intel {
       'plugin_url' => $this->url,
       'extends_plugin_un' => 'wpcf7',
       'extends_plugin_title' => __('Contact Form 7', 'contact-form-7'),
-      'update_file' => 'wpcf7-intel.install', // default [plugin_un].install
+      'update_file' => 'wpcf7-intel.install.php', // default [plugin_un].install
     );
     return $info;
   }
@@ -359,7 +359,7 @@ final class WPCF7_Intel {
       'access callback' => 'user_access',
       'access arguments' => array('admin intel'),
       'type' => Intel_Df::MENU_LOCAL_TASK,
-      'file' => 'admin/' . $this->plugin_un . '.admin_setup.inc',
+      'file' => 'admin/' . $this->plugin_un . '.admin_setup.php',
       'file path' => $this->dir,
     );
     $items['admin/help/demo/' . $this->plugin_un] = array(
@@ -508,7 +508,7 @@ final class WPCF7_Intel {
 
     // Intel setup checks. Alternative to using hook_wp_loaded
     if (!$this->is_intel_installed()) {
-      require_once( $this->dir . $this->plugin_un . '.setup.inc' );
+      require_once( $this->dir . $this->plugin_un . '.setup.php' );
       wpcf7_intel_setup()->admin_menu_plugin_setup();
     }
   }
@@ -521,7 +521,7 @@ final class WPCF7_Intel {
       'title' => __("Intelligence settings", $this->plugin_un),
     );
     if (!$this->is_intel_installed('min')) {
-      require_once( $this->dir . $this->plugin_un . '.setup.inc' );
+      require_once( $this->dir . $this->plugin_un . '.setup.php' );
       $screen_vars['content'] = wpcf7_intel_setup()->get_plugin_setup_notice(array('inline' => 1));
       print intel_setup_theme('setup_screen', $screen_vars);
       return;
@@ -588,7 +588,7 @@ final class WPCF7_Intel {
 
   public function wpcf7_form_edit_page($contact_form) {
     if (!$this->is_intel_installed('min')) {
-      require_once( $this->dir . $this->plugin_un . '.setup.inc' );
+      require_once( $this->dir . $this->plugin_un . '.setup.php' );
       print wpcf7_intel_setup()->plugin_setup_notice(array('alert' => 1));
       return;
     }
@@ -962,15 +962,15 @@ function wpcf7_intel() {
 }
 wpcf7_intel();
 
-function _wpcf7_intel_activation() {
+function wpcf7_intel_activation_hook() {
   if (is_callable('intel_activate_plugin')) {
     intel_activate_plugin('wpcf7_intel');
   }
 }
-register_activation_hook( __FILE__, '_wpcf7_intel_activation' );
+register_activation_hook( __FILE__, 'wpcf7_intel_activation_hook' );
 
-function _wpcf7_intel_uninstall() {
-  require_once plugin_dir_path( __FILE__ ) . 'wpcf7-intel.install';
+function wpcf7_intel_uninstall_hook() {
+  require_once plugin_dir_path( __FILE__ ) . 'wpcf7-intel.install.php';
   wpcf7_intel_uninstall();
 }
-register_uninstall_hook( __FILE__, '_wpcf7_intel_uninstall' );
+register_uninstall_hook( __FILE__, 'wpcf7_intel_uninstall_hook' );

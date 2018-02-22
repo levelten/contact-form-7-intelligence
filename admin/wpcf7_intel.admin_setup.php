@@ -51,7 +51,7 @@ function wpcf7_intel_admin_setup_page() {
 function wpcf7_intel_admin_setup_intel_plugin($form, &$form_state) {
   $f = array();
 
-  include_once wpcf7_intel()->dir . 'wpcf7_intel.setup.inc';
+  include_once wpcf7_intel()->dir . 'wpcf7_intel.setup.php';
 
   $instructions = wpcf7_intel_setup()->get_intel_install_instructions();
 
@@ -64,7 +64,7 @@ function wpcf7_intel_admin_setup_intel_plugin($form, &$form_state) {
 }
 
 function wpcf7_intel_admin_setup_intel_plugin_check($form, &$form_state) {
-  include_once INTEL_DIR . 'includes/intel.ga.inc';
+  include_once INTEL_DIR . 'includes/intel.ga.php';
 
   $status = array();
 
@@ -86,7 +86,7 @@ function wpcf7_intel_admin_setup_intel_plugin_validate($form, &$form_state) {
 }
 
 function wpcf7_intel_admin_setup_intel_profile($form, &$form_state) {
-  include_once INTEL_DIR . 'admin/intel.admin_setup.inc';
+  include_once INTEL_DIR . 'admin/intel.admin_setup.php';
   $options = array(
     'imapi_property_setup' => array(
       'callback_destination' => Intel_Df::url('admin/config/intel/settings/setup/wpcf7_intel'),
@@ -96,17 +96,17 @@ function wpcf7_intel_admin_setup_intel_profile($form, &$form_state) {
 }
 
 function wpcf7_intel_admin_setup_intel_profile_check($form, &$form_state) {
-  include_once INTEL_DIR . 'admin/intel.admin_setup.inc';
+  include_once INTEL_DIR . 'admin/intel.admin_setup.php';
   return intel_admin_setup_intel_profile_check($form, $form_state);
 }
 
 function wpcf7_intel_admin_setup_intel_profile_validate($form, &$form_state, $status) {
-  include_once INTEL_DIR . 'admin/intel.admin_setup.inc';
+  include_once INTEL_DIR . 'admin/intel.admin_setup.php';
   return intel_admin_setup_intel_profile_validate($form, $form_state, $status);
 }
 
 function wpcf7_intel_admin_setup_intel_profile_submit($form, &$form_state) {
-  include_once INTEL_DIR . 'admin/intel.admin_setup.inc';
+  include_once INTEL_DIR . 'admin/intel.admin_setup.php';
   return intel_admin_setup_intel_profile_submit($form, $form_state);
 }
 
