@@ -4,9 +4,9 @@
  * Admin configuration management
  */
 
-include_once INTEL_DIR . 'includes/intel.wizard.inc';
+include_once INTEL_DIR . 'includes/intel.wizard.php';
 
-include_once INTEL_DIR . 'admin/intel.admin_setup.inc';
+include_once INTEL_DIR . 'admin/intel.admin_setup.php';
 
 function wpcf7_intel_admin_setup_wizard_info($items = array()) {
 
@@ -89,7 +89,7 @@ function wpcf7_intel_admin_setup_intel_profile($form, &$form_state) {
   include_once INTEL_DIR . 'admin/intel.admin_setup.php';
   $options = array(
     'imapi_property_setup' => array(
-      'callback_destination' => Intel_Df::url('admin/config/intel/settings/setup/wpcf7_intel'),
+      'callback_destination' => 'admin/config/intel/settings/setup/wpcf7_intel',
     ),
   );
   return intel_admin_setup_intel_profile($form, $form_state, $options);
@@ -231,7 +231,7 @@ function wpcf7_intel_admin_setup_finish($form, &$form_state) {
   $items[] = '<p>';
   $items[] = Intel_Df::t(__('You can customize form tracking in !extends_link settings or view the !intel_link.', 'wpcf7_intel'),
     array(
-      '!extends_link' => Intel_Df::l(__('Contact Form 7', 'wpcf7_intel'), 'wp-admin/admin.php?page=wpcf7'),
+      '!extends_link' => Intel_Df::l(__('Contact Form 7', 'wpcf7_intel'), 'admin.php?page=wpcf7'),
       '!intel_link' => Intel_Df::l(__('Intelligence form settings list', 'wpcf7_intel'), 'admin/config/intel/settings/form'),
     ));
   $items[] = '</p>';

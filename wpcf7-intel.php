@@ -249,8 +249,10 @@ final class WPCF7_Intel {
   function intel_plugin_info($info = array()) {
     $info = array(
       'plugin_un' => $this->plugin_un,
+      'plugin_version' => $this->version,
       'plugin_title' => __('Contact Form 7 Google Analytics Intelligence', $this->plugin_un),
       'plugin_title_short' => __('Contact Form 7 GA Intelligence', $this->plugin_un),
+      'plugin_slug' => 'df7-intelligence',
       'plugin_file' => 'wpcf7-intel.php', // Main plugin file
       'plugin_path' => $this->dir, // (deprecated) The path to the directory containing file
       'plugin_dir' => $this->dir, // The path to the directory containing file
@@ -541,7 +543,7 @@ final class WPCF7_Intel {
       $eventgoal_options = intel_get_form_submission_eventgoal_options();
       $default_name = get_option('intel_form_track_submission_default', 'form_submission');
       $value = !empty($eventgoal_options[$default_name]) ? $eventgoal_options[$default_name] : Intel_Df::t('(not set)');
-      $l_options = Intel_Df::l_options_add_destination('wp-admin/admin.php?page=wpcf7_intel');
+      $l_options = Intel_Df::l_options_add_destination('admin.php?page=wpcf7_intel');
       $l_options['attributes'] = array(
         'class' => array('button'),
       );
