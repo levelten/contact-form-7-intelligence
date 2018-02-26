@@ -143,7 +143,7 @@ if (!is_callable('intel_setup')) {
 
       $type = !empty($options['type']) ? $options['type'] : 'error';
       $notice_class = "intel-setup notice notice-$type";
-      if (!empty($vars['inline'])) {
+      if (!empty($options['inline'])) {
         $notice_class .= " inline";
       }
 
