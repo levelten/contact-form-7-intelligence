@@ -259,7 +259,7 @@ final class WPCF7_Intel {
       'plugin_url' => $this->url,
       'extends_plugin_un' => 'wpcf7',
       'extends_plugin_title' => __('Contact Form 7', 'contact-form-7'),
-      'update_file' => 'wpcf7-intel.install.php', // default [plugin_un].install
+      'update_file' => 'wpcf7_intel.install.php', // default [plugin_un].install
     );
     return $info;
   }
@@ -972,7 +972,7 @@ function wpcf7_intel_activation_hook() {
 register_activation_hook( __FILE__, 'wpcf7_intel_activation_hook' );
 
 function wpcf7_intel_uninstall_hook() {
-  require_once plugin_dir_path( __FILE__ ) . 'wpcf7-intel.install.php';
+  require_once plugin_dir_path( __FILE__ ) . 'wpcf7_intel.install.php';
   wpcf7_intel_uninstall();
 }
 register_uninstall_hook( __FILE__, 'wpcf7_intel_uninstall_hook' );

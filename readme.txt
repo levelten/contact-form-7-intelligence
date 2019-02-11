@@ -109,3 +109,6 @@ No notices
 
 = 1.1.1 =
 * WP 5.0 support
+
+= 1.1.2 =
+* Fix uninstall bug
